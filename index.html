@@ -19,14 +19,27 @@
     </div>
 
     <div class="contenedor-video">
-    <div class="video-wrapper">
-        <iframe 
-            src="https://drive.google.com/file/d/1OY8uoPC1cXfjLQOM2wqx0Dy5MtVgHnS2/preview" 
-            allow="autoplay; encrypted-media" 
-            allowfullscreen>
-        </iframe>
+        <div class="video-columna">
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://drive.google.com/file/d/1OY8uoPC1cXfjLQOM2wqx0Dy5MtVgHnS2/preview" 
+                    allow="autoplay; encrypted-media" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
+            <a href="https://drive.google.com/uc?export=download&id=1OY8uoPC1cXfjLQOM2wqx0Dy5MtVgHnS2" 
+               class="btn-descargar-video" 
+               target="_blank">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Descargar Video High Quality
+            </a>
+        </div>
     </div>
-</div>
 
     <div class="barra-acciones" id="barra-acciones" style="display: none;">
       <button id="btn-descargar-todo" class="btn-accion">
@@ -61,24 +74,19 @@
       const FOTOS_POR_LOTE = 15; 
       let columnasGlobales = [];
 
-      // 1. CARGA DE DATOS
       fetch('fotos.json')
         .then((response) => response.json())
         .then((fotos) => {
           cargandoTexto.style.display = "none";
           if (!fotos || fotos.length === 0) return;
 
-          // ORDEN INVERSO (Lo más nuevo primero)
+          // ORDEN INVERSO
           todasLasFotos = fotos.reverse(); 
           
           barraAcciones.style.display = "flex"; 
           iniciarGaleria(todasLasFotos); 
-        })
-        .catch((error) => {
-          cargandoTexto.innerText = "❌ Error al cargar fotos.json";
         });
 
-      // 2. INICIALIZAR GRILLA MASONRY
       function iniciarGaleria(listaFotos) {
         contenedor.innerHTML = ""; 
         listaActual = listaFotos;
@@ -98,7 +106,6 @@
         cargarSiguienteLote();
       }
 
-      // 3. CARGA PROGRESIVA (Lazy Load)
       function cargarSiguienteLote() {
         let fragmento = listaActual.slice(indiceActual, indiceActual + FOTOS_POR_LOTE);
         if (fragmento.length === 0) return; 
@@ -128,14 +135,12 @@
         actualizarLightbox();
       }
 
-      // 4. SCROLL INFINITO
       window.addEventListener('scroll', () => {
           if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
               if (indiceActual < listaActual.length) cargarSiguienteLote();
           }
       });
 
-      // 5. VISOR DE FOTOS (LIGHTBOX)
       function actualizarLightbox() {
           if (!lightboxInstancia) {
               lightboxInstancia = GLightbox({ touchNavigation: true, loop: true });
@@ -144,24 +149,23 @@
           }
       }
 
-      // 6. BOTONES GLOBALES
       btnVerFavoritos.onclick = () => {
         if (!mostrandoFavoritos) {
           let misFavs = JSON.parse(localStorage.getItem(CLAVE_FAVORITOS)) || [];
           if (misFavs.length === 0) { alert("No tienes favoritos aún"); return; }
           let filtradas = todasLasFotos.filter(f => misFavs.includes(f.id));
           mostrandoFavoritos = true;
-          btnVerFavoritos.innerText = "⬅ Ver Todas";
+          btnVerFavoritos.innerText = "⬅ VER TODAS";
           iniciarGaleria(filtradas);
         } else {
           mostrandoFavoritos = false;
-          btnVerFavoritos.innerText = "Ver Favoritos";
+          btnVerFavoritos.innerText = "VER FAVORITOS";
           iniciarGaleria(todasLasFotos);
         }
       };
 
       btnDescargarTodo.onclick = () => {
-        const ID_ZIP = "TU_ID_AQUI"; 
+        const ID_ZIP = "ID_DEL_ZIP_AQUI"; 
         window.open(`https://drive.google.com/uc?export=download&id=${ID_ZIP}`, "_blank");
       };
     </script>
