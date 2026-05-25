@@ -1,8 +1,7 @@
 /* ============================================================
-   ESTILO EDITORIAL - PORTADA FULL SCREEN & CORTE LIMPIO
+   ESTILO EDITORIAL - CORTE LIMPIO & PIXIESET LOOK
    ============================================================ */
 
-/* Importamos las fuentes */
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300&display=swap");
 
 /* --- 1. Ajustes Globales --- */
@@ -16,11 +15,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- 2. Portada (Header) - AHORA OCUPA TODA LA PANTALLA --- */
+/* --- 2. Portada Full Screen --- */
 .header-galeria {
   position: relative;
   width: 100%;
-  height: 100vh; /* Ocupa el 100% del alto de la pantalla inicial */
+  height: 100vh; 
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,7 +29,6 @@ body {
   background-color: #000000;
 }
 
-/* Imagen de portada con filtro oscuro */
 .header-galeria::before {
   content: "";
   position: absolute;
@@ -46,17 +44,12 @@ body {
   opacity: 0.9;
 }
 
-/* Sin degradado para un corte limpio al bajar */
-.header-galeria::after {
-  display: none;
-}
-
-/* --- 3. Tipografía sobre imagen --- */
+/* --- 3. Tipografía y Logo --- */
 .titulo {
   font-family: "Cormorant Garamond", serif;
-  font-size: clamp(48px, 8vw, 80px); /* Tamaño dinámico según pantalla */
+  font-size: clamp(48px, 8vw, 80px);
   font-weight: 300;
-  margin: 0 0 10px 0;
+  margin: 0;
   color: #ffffff; 
   letter-spacing: 2px;
   position: relative;
@@ -70,119 +63,45 @@ body {
   letter-spacing: 8px;
   text-transform: uppercase;
   font-weight: 700;
+  margin-top: 10px;
   position: relative;
   z-index: 3;
 }
 
-/* --- 4. Barra de Acciones (MÁS DELGADA) --- */
-.barra-acciones {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  /* Reducimos el padding de 50px a 25px para que sea más delgada */
-  padding: 25px 20px; 
-  background-color: #ffffff;
-  flex-wrap: wrap; 
-}
-
-.btn-accion {
-  padding: 12px 28px;
-  border-radius: 50px;
-  border: 1px solid #e0e0e0;
-  background-color: transparent;
-  color: #666666; 
-  font-family: 'Lato', sans-serif;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-accion:hover {
-  border-color: #000000;
-  color: #000000;
-  background-color: #f9f9f9;
-}
-
-.btn-accion.activo {
-  background-color: #000000;
-  color: #ffffff;
-  border-color: #000000;
-}
-
-/* --- 5. Cuadrícula Masonry --- */
-.grid-galeria {
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-  max-width: 1400px;
-  margin: 0 auto;
-  background-color: #ffffff;
-}
-
-.columna-masonry {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.foto-link {
-  width: 100%;
-  overflow: hidden;
-  background-color: #f0f0f0; 
-  display: block;
-}
-
-.foto-img {
-  width: 100%;
+.logo-header {
+  position: relative;
+  z-index: 3;
+  width: 60px;
   height: auto;
-  display: block;
-  transition: opacity 0.4s ease;
+  margin-top: 30px;
+  opacity: 0.9;
+  filter: brightness(0) invert(1);
 }
 
-.foto-link:hover .foto-img {
-  opacity: 0.8;
-}
-
-/* --- 6. Cargando --- */
-.cargando {
-  padding: 80px;
-  color: #999999;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-}
-
-/* --- 7. Responsive --- */
-@media (max-width: 768px) {
-  .header-galeria { height: 100vh; } /* También full screen en móvil */
-  .titulo { font-size: 42px; }
-  .grid-galeria { gap: 5px; padding: 5px; }
-  .barra-acciones { padding: 20px 10px; } /* Un poco más delgado en móvil */
-}
-
-/* --- SECCIÓN DE VIDEO --- */
+/* --- 4. Sección de Video --- */
 .contenedor-video {
     width: 100%;
-    background-color: #ffffff; /* Fondo blanco para el corte limpio */
-    padding: 60px 20px 20px 20px; /* Espacio superior para separar de la portada */
+    background-color: #ffffff;
+    padding: 60px 20px 20px 20px;
     display: flex;
     justify-content: center;
     box-sizing: border-box;
 }
 
+.video-columna {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
 .video-wrapper {
     width: 100%;
-    max-width: 900px; /* Ancho máximo para que no se vea gigante en PC */
-    aspect-ratio: 16 / 9; /* Mantiene la forma del video */
+    aspect-ratio: 16 / 9;
     background-color: #000;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* Sombra elegante */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     border-radius: 4px;
     overflow: hidden;
 }
@@ -193,9 +112,88 @@ body {
     border: none;
 }
 
-/* Ajuste para móviles */
+.btn-descargar-video {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #888888;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-descargar-video:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+/* --- 5. Barra de Acciones --- */
+.barra-acciones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 25px 20px; 
+  background-color: #ffffff;
+}
+
+.btn-accion {
+  padding: 10px 24px;
+  border-radius: 50px;
+  border: 1px solid #e0e0e0;
+  background-color: transparent;
+  color: #666666; 
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- 6. Grilla Masonry --- */
+.grid-galeria {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.columna-masonry {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.foto-img {
+  width: 100%;
+  display: block;
+  transition: opacity 0.4s ease;
+}
+
+.foto-img:hover {
+    opacity: 0.8;
+}
+
+.cargando {
+  padding: 80px;
+  color: #999;
+  font-size: 12px;
+  letter-spacing: 3px;
+}
+
+/* --- 7. Responsive --- */
 @media (max-width: 768px) {
-    .contenedor-video {
-        padding: 40px 10px 10px 10px;
-    }
+  .header-galeria { height: 100vh; }
+  .titulo { font-size: 42px; }
+  .grid-galeria { gap: 5px; padding: 5px; }
 }
