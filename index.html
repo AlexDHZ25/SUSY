@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Galería Privada | SUSY</title>
 
+    <link rel="icon" type="image/png" href="https://drive.google.com/thumbnail?id=1hpQGY_QfG4VAE4g8VJRTAYAXUWE-XtOB&sz=w32">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
+</head>
+<body>
+
     <div class="header-galeria">
       <div class="titulo">SUSY</div>
       <div class="subtitulo">MIS XV</div>
+      <img src="https://drive.google.com/thumbnail?id=1hpQGY_QfG4VAE4g8VJRTAYAXUWE-XtOB&sz=w200" class="logo-header" alt="Logo Agency">
     </div>
 
     <div class="barra-acciones" id="barra-acciones" style="display: none;">
       <button id="btn-descargar-todo" class="btn-accion">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         Descargar Galería
       </button>
       <button id="btn-ver-favoritos" class="btn-accion">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
         Ver Favoritos
       </button>
     </div>
@@ -37,48 +41,38 @@
       const btnVerFavoritos = document.getElementById("btn-ver-favoritos");
       const btnDescargarTodo = document.getElementById("btn-descargar-todo");
 
-      // Clave única para los favoritos de Fátima
-      const CLAVE_FAVORITOS = "favoritos";
+      const CLAVE_FAVORITOS = "favoritos_susy";
 
       let todasLasFotos = [];
       let mostrandoFavoritos = false;
       let lightboxInstancia = null;
-      
       let listaActual = []; 
       let indiceActual = 0;
-      const FOTOS_POR_LOTE = 15; // Carga rápida inicial
+      const FOTOS_POR_LOTE = 15; 
       let columnasGlobales = [];
 
-      // 1. 🚀 MOTOR TURBO: Cargamos las fotos desde el archivo estático
+      // 1. CARGA DE DATOS
       fetch('fotos.json')
         .then((response) => response.json())
         .then((fotos) => {
           cargandoTexto.style.display = "none";
+          if (!fotos || fotos.length === 0) return;
 
-          if (!fotos || fotos.length === 0) {
-            contenedor.innerHTML = "<p style='width: 100%; font-size: 14px; color: #ccc;'>Aún no hay fotos cargadas.</p>";
-            return;
-          }
-
+          // ORDEN INVERSO (Lo más nuevo primero)
           todasLasFotos = fotos.reverse(); 
+          
           barraAcciones.style.display = "flex"; 
           iniciarGaleria(todasLasFotos); 
         })
         .catch((error) => {
-          cargandoTexto.innerText = "❌ No se encontró el archivo fotos.json. Asegúrate de haberlo subido.";
-          cargandoTexto.style.color = "#ff6b6b";
+          cargandoTexto.innerText = "❌ Error al cargar fotos.json";
         });
 
-      // 2. Preparamos la galería y las columnas
+      // 2. INICIALIZAR GRILLA MASONRY
       function iniciarGaleria(listaFotos) {
         contenedor.innerHTML = ""; 
         listaActual = listaFotos;
         indiceActual = 0;
-
-        if (listaFotos.length === 0) {
-            contenedor.innerHTML = "<p style='width: 100%; font-size: 16px; color: #777; margin-top: 40px;'>Aún no hay fotos guardadas en favoritos.</p>";
-            return;
-        }
 
         let numColumnas = window.innerWidth > 768 ? 3 : 2;
         columnasGlobales = [];
@@ -90,15 +84,11 @@
           columnasGlobales.push(col);
         }
 
-        if (lightboxInstancia) {
-            lightboxInstancia.destroy();
-            lightboxInstancia = null;
-        }
-        
+        if (lightboxInstancia) lightboxInstancia.destroy();
         cargarSiguienteLote();
       }
 
-      // 3. Scroll Infinito: Inyectar fotos poco a poco
+      // 3. CARGA PROGRESIVA (Lazy Load)
       function cargarSiguienteLote() {
         let fragmento = listaActual.slice(indiceActual, indiceActual + FOTOS_POR_LOTE);
         if (fragmento.length === 0) return; 
@@ -106,179 +96,64 @@
         let numColumnas = columnasGlobales.length;
 
         fragmento.forEach((foto, i) => {
-          let globalIndex = indiceActual + i; 
-          
+          let globalIndex = indiceActual + i;
           const miniatura = `https://drive.google.com/thumbnail?id=${foto.id}&sz=w400`;
           const altaRes = `https://drive.google.com/thumbnail?id=${foto.id}&sz=w1600`;
 
           const enlace = document.createElement("a");
           enlace.href = altaRes;
           enlace.className = "foto-link glightbox";
-          enlace.setAttribute("data-gallery", "galeria-fatima");
-          enlace.setAttribute("data-type", "image");
           enlace.setAttribute("data-id", foto.id);
 
           const img = document.createElement("img");
           img.src = miniatura;
           img.className = "foto-img";
-          img.loading = "lazy"; 
-          img.alt = "Foto de Fátima";
-
+          img.loading = "lazy";
+          
           enlace.appendChild(img);
-
-          let turnoColumna = globalIndex % numColumnas;
-          columnasGlobales[turnoColumna].appendChild(enlace);
+          columnasGlobales[globalIndex % numColumnas].appendChild(enlace);
         });
 
         indiceActual += FOTOS_POR_LOTE;
-
-        if (!lightboxInstancia) {
-            iniciarEventosLightbox();
-        } else {
-            lightboxInstancia.reload();
-        }
+        actualizarLightbox();
       }
 
-      // 4. Detectar Scroll del cliente
+      // 4. SCROLL INFINITO
       window.addEventListener('scroll', () => {
-          if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
-              if (indiceActual < listaActual.length) {
-                  cargarSiguienteLote();
-              }
+          if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
+              if (indiceActual < listaActual.length) cargarSiguienteLote();
           }
       });
 
-      // 5. Configuración del Visor VIP y Favoritos
-      function iniciarEventosLightbox() {
-          lightboxInstancia = GLightbox({
-            touchNavigation: true,
-            loop: true,
-            zoomable: false,
-          });
-
-          lightboxInstancia.on("slide_after_load", (data) => {
-            const slide = data.slideNode;
-            const imagenAbierta = slide.querySelector(".gslide-media img");
-            
-            if (imagenAbierta) {
-              imagenAbierta.style.cursor = "pointer";
-              imagenAbierta.onclick = function () { lightboxInstancia.nextSlide(); };
-            }
-
-            const photoId = data.trigger.getAttribute("data-id");
-
-            if (!slide.querySelector(".botones-vip")) {
-              const contenedorBotones = document.createElement("div");
-              contenedorBotones.className = "botones-vip";
-              contenedorBotones.style.position = "absolute";
-              contenedorBotones.style.bottom = "30px";
-              contenedorBotones.style.left = "0";
-              contenedorBotones.style.width = "100%";
-              contenedorBotones.style.display = "flex";
-              contenedorBotones.style.justifyContent = "center";
-              contenedorBotones.style.gap = "15px";
-              contenedorBotones.style.zIndex = "99999";
-
-              // --- BOTÓN 1: FAVORITOS ---
-              const iconoCorazonVacio = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: -3px; margin-right: 5px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
-              const iconoCorazonRojo = `<svg width="16" height="16" viewBox="0 0 24 24" fill="#ff4b4b" stroke="#ff4b4b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: -3px; margin-right: 5px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
-
-              const btnFavorito = document.createElement("button");
-              btnFavorito.style.padding = "10px 20px";
-              btnFavorito.style.borderRadius = "30px";
-              btnFavorito.style.border = "none";
-              btnFavorito.style.backgroundColor = "rgba(0,0,0,0.7)";
-              btnFavorito.style.color = "#fff";
-              btnFavorito.style.fontWeight = "400";
-              btnFavorito.style.letterSpacing = "1px";
-              btnFavorito.style.cursor = "pointer";
-              btnFavorito.style.backdropFilter = "blur(5px)";
-
-              let misFavoritos = JSON.parse(localStorage.getItem(CLAVE_FAVORITOS)) || [];
-              let esFavorito = misFavoritos.includes(photoId);
-
-              btnFavorito.innerHTML = esFavorito ? (iconoCorazonRojo + " Favorito") : (iconoCorazonVacio + " Favorito");
-
-              btnFavorito.onclick = (e) => {
-                e.stopPropagation();
-                misFavoritos = JSON.parse(localStorage.getItem(CLAVE_FAVORITOS)) || [];
-
-                if (misFavoritos.includes(photoId)) {
-                  misFavoritos = misFavoritos.filter((id) => id !== photoId);
-                  btnFavorito.innerHTML = iconoCorazonVacio + " Favorito";
-                } else {
-                  misFavoritos.push(photoId);
-                  btnFavorito.innerHTML = iconoCorazonRojo + " Favorito";
-                }
-                localStorage.setItem(CLAVE_FAVORITOS, JSON.stringify(misFavoritos));
-              };
-
-              // --- BOTÓN 2: DESCARGAR FOTO INDIVIDUAL ---
-              const iconoDescarga = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: -3px; margin-right: 5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
-              
-              const btnDescargarFoto = document.createElement("button");
-              // Usamos el mismo estilo elegante del botón favorito
-              btnDescargarFoto.style.padding = "10px 20px";
-              btnDescargarFoto.style.borderRadius = "30px";
-              btnDescargarFoto.style.border = "none";
-              btnDescargarFoto.style.backgroundColor = "rgba(0,0,0,0.7)";
-              btnDescargarFoto.style.color = "#fff";
-              btnDescargarFoto.style.fontWeight = "400";
-              btnDescargarFoto.style.letterSpacing = "1px";
-              btnDescargarFoto.style.cursor = "pointer";
-              btnDescargarFoto.style.backdropFilter = "blur(5px)";
-              
-              btnDescargarFoto.innerHTML = iconoDescarga + " Descargar";
-
-              btnDescargarFoto.onclick = (e) => {
-                e.stopPropagation();
-                // Truco de Drive para forzar la descarga directa del archivo original
-                window.open(`https://drive.google.com/uc?export=download&id=${photoId}`, "_blank");
-              };
-
-              // Metemos los dos botones al contenedor
-              contenedorBotones.appendChild(btnFavorito);
-              contenedorBotones.appendChild(btnDescargarFoto);
-              
-              // Metemos el contenedor a la pantalla
-              slide.querySelector(".ginner-container").appendChild(contenedorBotones);
-            }
-          });
+      // 5. VISOR DE FOTOS (LIGHTBOX)
+      function actualizarLightbox() {
+          if (!lightboxInstancia) {
+              lightboxInstancia = GLightbox({ touchNavigation: true, loop: true });
+          } else {
+              lightboxInstancia.reload();
+          }
       }
 
-      // --- 6. LÓGICA DE LOS BOTONES GLOBALES ---
-      
-      // Acción: Descargar el ZIP completo directamente
-      btnDescargarTodo.onclick = () => {
-        // ⚠️ PEGA AQUÍ EL ID DEL ARCHIVO .ZIP DE FÁTIMA
-        const ID_DEL_ZIP = ""; 
-        window.open(`https://drive.google.com/uc?export=download&id=${ID_DEL_ZIP}`, "_blank");
-      };
-
-      // Acción: Filtrar Favoritos
+      // 6. BOTONES GLOBALES
       btnVerFavoritos.onclick = () => {
-        const iconoRegreso = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`;
-        const iconoCorazon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`;
-
         if (!mostrandoFavoritos) {
-          let misFavoritos = JSON.parse(localStorage.getItem(CLAVE_FAVORITOS)) || [];
-          if (misFavoritos.length === 0) {
-              alert("Aún no tienes fotos guardadas en favoritos. ¡Abre una foto y dale al corazón!");
-              return;
-          }
-          let fotosFiltradas = todasLasFotos.filter(foto => misFavoritos.includes(foto.id));
-          
+          let misFavs = JSON.parse(localStorage.getItem(CLAVE_FAVORITOS)) || [];
+          if (misFavs.length === 0) { alert("No tienes favoritos aún"); return; }
+          let filtradas = todasLasFotos.filter(f => misFavs.includes(f.id));
           mostrandoFavoritos = true;
-          btnVerFavoritos.innerHTML = iconoRegreso + " Ver Todas las Fotos";
-          btnVerFavoritos.classList.add("activo");
-          iniciarGaleria(fotosFiltradas); 
+          btnVerFavoritos.innerText = "⬅ Ver Todas";
+          iniciarGaleria(filtradas);
         } else {
           mostrandoFavoritos = false;
-          btnVerFavoritos.innerHTML = iconoCorazon + " Ver Favoritos";
-          btnVerFavoritos.classList.remove("activo");
-          iniciarGaleria(todasLasFotos); 
+          btnVerFavoritos.innerText = "Ver Favoritos";
+          iniciarGaleria(todasLasFotos);
         }
       };
+
+      btnDescargarTodo.onclick = () => {
+        const ID_ZIP = "TU_ID_AQUI"; 
+        window.open(`https://drive.google.com/uc?export=download&id=${ID_ZIP}`, "_blank");
+      };
     </script>
-  </body>
+</body>
 </html>
