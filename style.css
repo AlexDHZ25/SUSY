@@ -1,22 +1,22 @@
 /* ============================================================
-   ESTILO DARK EDITORIAL - AGENCIA
+   ESTILO EDITORIAL - CORTE LIMPIO (PORTADA OSCURA / BODY BLANCO)
    ============================================================ */
 
-/* Importamos las fuentes elegantes */
+/* Importamos las fuentes */
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Cormorant+Garamond:wght@300&display=swap");
 
-/* --- 1. Ajustes Globales (Fondo Oscuro) --- */
+/* --- 1. Ajustes Globales (FONDO BLANCO) --- */
 body {
   font-family: "Lato", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #111111; /* Negro profundo */
-  color: #eeeeee; /* Texto claro */
+  background-color: #ffffff; /* Fondo blanco para la galería */
+  color: #333333; /* Texto oscuro para lectura en blanco */
   text-align: center;
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- 2. Portada (Header) con Foto de Susy --- */
+/* --- 2. Portada (Header) - FOTO OSCURA --- */
 .header-galeria {
   position: relative;
   width: 100%;
@@ -27,10 +27,10 @@ body {
   align-items: center;
   text-align: center;
   overflow: hidden;
-  background-color: #111111; 
+  background-color: #000000; /* Fondo negro de seguridad */
 }
 
-/* Imagen de fondo con ID corregido y Opacidad para resaltar texto */
+/* Imagen de portada con filtro oscuro */
 .header-galeria::before {
   content: "";
   position: absolute;
@@ -42,67 +42,55 @@ body {
   background-size: cover;
   background-position: center center;
   z-index: 1;
-  opacity: 0.75; /* Oscurece la foto un 25% */
+  /* Oscurecemos la foto directamente con brillo y opacidad */
+  filter: brightness(0.6); 
+  opacity: 0.9;
 }
 
-/* Degradado Oscuro (Vignette) */
+/* ELIMINADO EL DEGRADADO (After vacío o sin fondo) */
 .header-galeria::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.4) 0%,   /* Sombra arriba */
-    rgba(0, 0, 0, 0.1) 50%,  /* Claridad al centro */
-    rgba(17, 17, 17, 1) 100% /* Se funde con el fondo negro del body */
-  );
-  z-index: 2;
+  display: none; /* Quitamos el degradado para un corte limpio */
 }
 
-/* --- 3. Tipografía sobre imagen en Blanco --- */
+/* --- 3. Tipografía sobre imagen (BLANCO) --- */
 .titulo {
   font-family: "Cormorant Garamond", serif;
   font-size: 64px;
   font-weight: 300;
   margin: 0 0 10px 0;
-  color: #ffffff; /* Blanco puro */
+  color: #ffffff; 
   letter-spacing: 2px;
   position: relative;
   z-index: 3;
-  text-shadow: 0px 4px 15px rgba(0,0,0,0.5); /* Sombra para lectura perfecta */
 }
 
 .subtitulo {
   font-size: 13px;
-  color: #ffffff; /* Blanco puro */
+  color: #ffffff;
   letter-spacing: 6px;
   text-transform: uppercase;
   font-weight: 700;
   position: relative;
   z-index: 3;
-  opacity: 0.9;
 }
 
-/* --- 4. Barra de Acciones (Botones Dark) --- */
+/* --- 4. Barra de Acciones (FONDO BLANCO) --- */
 .barra-acciones {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 15px;
-  padding: 40px 20px;
-  background-color: #111111; 
+  padding: 50px 20px;
+  background-color: #ffffff; /* Corte limpio aquí */
   flex-wrap: wrap; 
 }
 
 .btn-accion {
   padding: 12px 28px;
   border-radius: 50px;
-  border: 1px solid #333333; /* Borde oscuro sutil */
+  border: 1px solid #e0e0e0;
   background-color: transparent;
-  color: #aaaaaa; 
+  color: #666666; 
   font-family: 'Lato', sans-serif;
   font-size: 11px;
   text-transform: uppercase;
@@ -115,24 +103,25 @@ body {
 }
 
 .btn-accion:hover {
-  border-color: #ffffff;
-  color: #ffffff;
-  background-color: rgba(255,255,255,0.05);
+  border-color: #000000;
+  color: #000000;
+  background-color: #f9f9f9;
 }
 
 .btn-accion.activo {
-  background-color: #ffffff;
-  color: #000000;
-  border-color: #ffffff;
+  background-color: #000000;
+  color: #ffffff;
+  border-color: #000000;
 }
 
-/* --- 5. Cuadrícula Masonry (Limpia) --- */
+/* --- 5. Cuadrícula Masonry (FONDO BLANCO) --- */
 .grid-galeria {
   display: flex;
   gap: 10px;
   padding: 10px;
   max-width: 1400px;
   margin: 0 auto;
+  background-color: #ffffff;
 }
 
 .columna-masonry {
@@ -145,7 +134,7 @@ body {
 .foto-link {
   width: 100%;
   overflow: hidden;
-  background-color: #1a1a1a; 
+  background-color: #f0f0f0; 
   display: block;
 }
 
@@ -153,38 +142,25 @@ body {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform 0.6s ease, opacity 0.4s ease;
-  filter: brightness(0.9); /* Un poco más oscuro por defecto */
+  transition: opacity 0.4s ease;
 }
 
 .foto-link:hover .foto-img {
-  opacity: 1;
-  filter: brightness(1.1); /* Brilla al pasar el mouse */
-  transform: scale(1.03); /* Zoom sutil tipo editorial */
+  opacity: 0.8;
 }
 
 /* --- 6. Cargando e Indicadores --- */
 .cargando {
   padding: 80px;
-  color: #555555;
+  color: #999999;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 3px;
 }
 
-/* Estilo para los botones DENTRO del visor (Lightbox) */
-.botones-vip button {
-  font-family: 'Lato', sans-serif !important;
-  font-size: 11px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 1.5px !important;
-}
-
-/* --- 7. Responsive (Móvil) --- */
+/* --- 7. Responsive --- */
 @media (max-width: 768px) {
   .header-galeria { height: 50vh; }
   .titulo { font-size: 42px; }
   .grid-galeria { gap: 5px; padding: 5px; }
-  .columna-masonry { gap: 5px; }
-  .barra-acciones { padding: 30px 10px; gap: 10px; }
 }
