@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Galería Privada | Fátima Isidro</title>
+    <title>Galería Privada | SUSY</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="header-galeria">
-      <div class="titulo">Regis</div>
-      <div class="subtitulo">cumple 2</div>
+      <div class="titulo">SUSY</div>
+      <div class="subtitulo">MIS XV</div>
     </div>
 
     <div class="barra-acciones" id="barra-acciones" style="display: none;">
@@ -38,7 +38,7 @@
       const btnDescargarTodo = document.getElementById("btn-descargar-todo");
 
       // Clave única para los favoritos de Fátima
-      const CLAVE_FAVORITOS = "favoritos_fatima";
+      const CLAVE_FAVORITOS = "favoritos";
 
       let todasLasFotos = [];
       let mostrandoFavoritos = false;
@@ -251,7 +251,7 @@
       // Acción: Descargar el ZIP completo directamente
       btnDescargarTodo.onclick = () => {
         // ⚠️ PEGA AQUÍ EL ID DEL ARCHIVO .ZIP DE FÁTIMA
-        const ID_DEL_ZIP = "1AhrjeddKLLcXGfmuKk5W31yABqOOjERj"; 
+        const ID_DEL_ZIP = ""; 
         window.open(`https://drive.google.com/uc?export=download&id=${ID_DEL_ZIP}`, "_blank");
       };
 
